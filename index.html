@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Mobile Slideshow</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+		}
+		.slideshow {
+  			width: 100vw;
+  			height: 100vh;
+  			background-size: cover;
+  			background-position: center;
+		}
+		.time {
+			position: absolute;
+			top: 90px;
+			right: 10px;
+			font-size: 200px; /* Increase font-size for bigger clock */
+			font-weight: 700;
+			color: white;
+			text-shadow: 0 0 3px black;
+			text-align: right;
+			border: 0px solid black;
+			padding: 0px;
+			border-radius: 10px;
+			box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+			margin-top: 5mm; /* Add this to move the clock down */
+		}
+        .button-container {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 70px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.6);
+        }
+        .button {
+            width: 45%;
+            height: 50px;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            color: white;
+            background-color: black;
+        }
+	</style>
+</head>
+<body>
+	<div class="slideshow"></div>
+	<div class="time"></div>
+	<div class="button-container">
+        <button class="button">Lift</button>
+        <button class="button">Power</button>
+    </div>
+	<script>
+	var imageNumber = 1; // start number
+	var slideshow = document.querySelector('.slideshow');
+	var preloadedImage = new Image();
+
+	function nextImage() {
+      var maxImageNumber = 27; // set the maximum number of images
+      var imageNumber = Math.floor(Math.random() * maxImageNumber) + 1; // generate a random image number
+      var imageUrl = "images/background (" + imageNumber + ").jpg";
+      var img = new Image();
+      img.onload = function() {
+        var oldSlideshow = document.querySelector('.slideshow');
+        slideshow.style.backgroundImage = "url('" + imageUrl + "')";
+        preloadedImage.src = "images/background (" + ((imageNumber % maxImageNumber) + 1) + ").jpg";
+        setTimeout(function() {
+          if (oldSlideshow) {
+            oldSlideshow.style.display = "none";
+          }
+          if (oldSlideshow) {
+            oldSlideshow.style.display = "block";
+          }
+        }, 500);
+        setTimeout(nextImage, 4000);
+      };
+      img.onerror = function() {
+        imageUrl = "images/background (" + imageNumber + ").jpeg";
+        var img2 = new Image();
+        img2.onload = function() {
+          var oldSlideshow = document.querySelector('.slideshow');
+          slideshow.style.backgroundImage = "url('" + imageUrl + "')";
+          preloadedImage.src = "images/background(" + ((imageNumber % maxImageNumber) + 1) + ").jpg";
+setTimeout(function() {
+if (oldSlideshow) {
+oldSlideshow.style.display = "none";
+}
+if (oldSlideshow) {
+oldSlideshow.style.display = "block";
+}
+}, 500);
+setTimeout(nextImage, 4000);
+};
+img2.onerror = function() {
+console.error("Error loading image: " + imageUrl);
+setTimeout(nextImage, 4000);
+};
+img2.src = imageUrl;
+};
+img.src = imageUrl;
+}
+function updateTime() {
+  var now = new Date();
+  var hours = now.getHours();
+  var minutes = now.getMinutes();
+  var timeString = hours.toString().padStart(2, "0") + ":" + minutes.toString().padStart(2, "0");
+  document.querySelector(".time").textContent = timeString;
+  setTimeout(updateTime, 1000);
+}
+
+function init() {
+  nextImage();
+  updateTime();
+}
+
+init();
+</script>
+</body>
+</html>
