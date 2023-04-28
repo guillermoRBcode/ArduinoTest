@@ -10,26 +10,26 @@
     }
 
     .slideshow {
-      position: absolute; /* Add this line */
+      position: absolute;
       height: 100vh;
-      width: 100vw; /* Add this line */
+      width: 100vw;
       background-size: cover;
       background-position: center;
       opacity: 0;
       transition: opacity 1s ease-in-out;
-      z-index: 0; /* Add this line */
+      z-index: 0;
     }
 
     .visible {
       opacity: 1;
-      z-index: 1; /* Add this line */
+      z-index: 1;
     }
 
     .time {
-          position: absolute;
+      position: absolute;
       top: 90px;
       right: 10px;
-      font-size: 200px; /* Increase font-size for bigger clock */
+      font-size: 200px;
       font-weight: 700;
       color: white;
       text-shadow: 0 0 3px black;
@@ -38,62 +38,63 @@
       padding: 0px;
       border-radius: 10px;
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
-      margin-top: 5mm; /* Add this to move the clock down */
+      margin-top: 5mm;
     }
   </style>
 </head>
 <body>
-  <div class="slideshow visible" id="slideshow1"></div> <!-- Add an ID -->
-  <div class="slideshow" id="slideshow2"></div> <!-- Add an ID -->
+  <div class="slideshow visible" id="slideshow1"></div>
+  <div class="slideshow" id="slideshow2"></div>
   <div class="time"></div>
   <script>
     var imageNumbers = [];
     var maxImageNumber = 67;
-    var slideshow1 = document.querySelector('#slideshow1'); // Update this line
-    var slideshow2 = document.querySelector('#slideshow2'); // Update this line
-    var currentSlideshow = slideshow1; // Add this line
+    var slideshow1 = document.querySelector('#slideshow1');
+    var slideshow2 = document.querySelector('#slideshow2');
+    var currentSlideshow = slideshow1;
 
-    function nextImage() {
+    function changeImage() {
       var imageNumber = Math.floor(Math.random() * maxImageNumber) + 1;
-
       while (imageNumbers.includes(imageNumber)) {
         imageNumber = Math.floor(Math.random() * maxImageNumber) + 1;
       }
-
       imageNumbers.push(imageNumber);
-
-      if (imageNumbers.length === maxImageNumber) {
-        imageNumbers = [];
+      if (imageNumbers.length > 3) {
+        imageNumbers.shift();
       }
 
       var imageUrl = "images/background (" + imageNumber + ").jpg";
       var img = new Image();
       img.onload = function() {
-        // Update the following lines
         var otherSlideshow = currentSlideshow === slideshow1 ? slideshow2 : slideshow1;
         otherSlideshow.style.backgroundImage = "url('" + imageUrl + "')";
         otherSlideshow.classList.add('visible');
         currentSlideshow.classList.remove('visible');
         currentSlideshow = otherSlideshow;
+        preloadNextImages();
       };
       img.src = imageUrl;
     }
 
-    setInterval(nextImage, 6000);
+    function preloadNextImages() {
+      for (var i = 1; i <= 2; i++) {
+        var preloadImageNumber = Math.floor(Math.random() * maxImageNumber) + 1;
+        while (imageNumbers.includes(preloadImageNumber)) {
+          preloadImageNumber = Math.floor(Math.random() * maxImageNumber) + 1;
+        }
+        imageNumbers.push(preloadImageNumber);
+        if (imageNumbers.length > 3) {
+          imageNumbers.shift();
+        }
 
-    function updateTime() {
- var date = new Date();
-      var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-      var minutes = date.getMinutes();
-      var seconds = date.getSeconds();
-      hours = hours < 10 ? "0" + hours : hours;
-      minutes = minutes < 10 ? "0" + minutes : minutes;
-      seconds = seconds < 10 ? "0" + seconds : seconds;
-      var timeString = hours + ":" + minutes + ":" + seconds + " " + (date.getHours() > 12 ? "PM" : "AM");
-      document.querySelector(".time").textContent = timeString;
+        var preloadImageUrl = "images/background (" + preloadImageNumber + ").jpg";
+        var preloadImg = new Image();
+        preloadImg.src = preloadImageUrl;
+      }
     }
 
-    setInterval(updateTime, 1000);
+    changeImage();
+    setInterval(changeImage, 6000);
   </script>
 </body>
 </html>
