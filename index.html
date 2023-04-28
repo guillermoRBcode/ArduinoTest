@@ -95,6 +95,19 @@
 
     changeImage();
     setInterval(changeImage, 4000);
+        function updateTime() {
+ var date = new Date();
+      var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+      var minutes = date.getMinutes();
+      var seconds = date.getSeconds();
+      hours = hours < 10 ? "0" + hours : hours;
+      minutes = minutes < 10 ? "0" + minutes : minutes;
+      seconds = seconds < 10 ? "0" + seconds : seconds;
+      var timeString = hours + ":" + minutes + ":" + seconds + " " + (date.getHours() > 12 ? "PM" : "AM");
+      document.querySelector(".time").textContent = timeString;
+    }
+
+    setInterval(updateTime, 1000);
   </script>
 </body>
 </html>
