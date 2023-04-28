@@ -10,19 +10,23 @@
     }
 
     .slideshow {
-      height: 100vh; /* Set height to full screen height */
+      position: absolute; /* Add this line */
+      height: 100vh;
+      width: 100vw; /* Add this line */
       background-size: cover;
       background-position: center;
       opacity: 0;
-      transition: opacity 1s ease-in-out; /* Add this line */
+      transition: opacity 1s ease-in-out;
+      z-index: 0; /* Add this line */
     }
 
     .visible {
       opacity: 1;
+      z-index: 1; /* Add this line */
     }
 
     .time {
-      position: absolute;
+          position: absolute;
       top: 90px;
       right: 10px;
       font-size: 200px; /* Increase font-size for bigger clock */
@@ -39,45 +43,46 @@
   </style>
 </head>
 <body>
-  <div class="slideshow visible"></div>
+  <div class="slideshow visible" id="slideshow1"></div> <!-- Add an ID -->
+  <div class="slideshow" id="slideshow2"></div> <!-- Add an ID -->
   <div class="time"></div>
   <script>
-    var imageNumbers = []; // array to store displayed image numbers
-    var maxImageNumber = 67; // set the maximum number of images
-    var slideshow = document.querySelector('.slideshow');
-    var preloadedImage = new Image();
+    var imageNumbers = [];
+    var maxImageNumber = 67;
+    var slideshow1 = document.querySelector('#slideshow1'); // Update this line
+    var slideshow2 = document.querySelector('#slideshow2'); // Update this line
+    var currentSlideshow = slideshow1; // Add this line
 
     function nextImage() {
-      var imageNumber = Math.floor(Math.random() * maxImageNumber) + 1; // generate a random image number
+      var imageNumber = Math.floor(Math.random() * maxImageNumber) + 1;
 
-      // check if image number has already been displayed
       while (imageNumbers.includes(imageNumber)) {
-        imageNumber = Math.floor(Math.random() * maxImageNumber) + 1; // generate a new random image number
+        imageNumber = Math.floor(Math.random() * maxImageNumber) + 1;
       }
 
-      imageNumbers.push(imageNumber); // add image number to array of displayed images
+      imageNumbers.push(imageNumber);
 
       if (imageNumbers.length === maxImageNumber) {
-        imageNumbers = []; // reset array of displayed images when all images have been shown
+        imageNumbers = [];
       }
 
       var imageUrl = "images/background (" + imageNumber + ").jpg";
       var img = new Image();
       img.onload = function() {
-        slideshow.classList.remove('visible');
-        setTimeout(function() {
-          slideshow.style.backgroundImage = "url('" + imageUrl + "')";
-          slideshow.classList.add('visible');
-          preloadedImage.src = "images/background (" + ((imageNumber % maxImageNumber) + 1) + ").jpg";
-        }, 1000);
+        // Update the following lines
+        var otherSlideshow = currentSlideshow === slideshow1 ? slideshow2 : slideshow1;
+        otherSlideshow.style.backgroundImage = "url('" + imageUrl + "')";
+        otherSlideshow.classList.add('visible');
+        currentSlideshow.classList.remove('visible');
+        currentSlideshow = otherSlideshow;
       };
       img.src = imageUrl;
     }
 
-    setInterval(nextImage, 6000); // call nextImage() every 6 seconds (1 second for transition + 5 seconds for display)
+    setInterval(nextImage, 6000);
 
     function updateTime() {
-      var date = new Date();
+ var date = new Date();
       var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
       var minutes = date.getMinutes();
       var seconds = date.getSeconds();
@@ -88,7 +93,7 @@
       document.querySelector(".time").textContent = timeString;
     }
 
-    setInterval(updateTime, 1000); // call updateTime() every second
+    setInterval(updateTime, 1000);
   </script>
 </body>
 </html>
