@@ -13,6 +13,12 @@
       height: 100vh; /* Set height to full screen height */
       background-size: cover;
       background-position: center;
+      opacity: 0;
+      transition: opacity 1s ease-in-out; /* Add this line */
+    }
+
+    .visible {
+      opacity: 1;
     }
 
     .time {
@@ -33,7 +39,7 @@
   </style>
 </head>
 <body>
-  <div class="slideshow"></div>
+  <div class="slideshow visible"></div>
   <div class="time"></div>
   <script>
     var imageNumbers = []; // array to store displayed image numbers
@@ -58,14 +64,17 @@
       var imageUrl = "images/background (" + imageNumber + ").jpg";
       var img = new Image();
       img.onload = function() {
-        var oldSlideshow = document.querySelector('.slideshow');
-        slideshow.style.backgroundImage = "url('" + imageUrl + "')";
-        preloadedImage.src = "images/background (" + ((imageNumber % maxImageNumber) + 1) + ").jpg";
+        slideshow.classList.remove('visible');
+        setTimeout(function() {
+          slideshow.style.backgroundImage = "url('" + imageUrl + "')";
+          slideshow.classList.add('visible');
+          preloadedImage.src = "images/background (" + ((imageNumber % maxImageNumber) + 1) + ").jpg";
+        }, 1000);
       };
       img.src = imageUrl;
     }
 
-    setInterval(nextImage, 5000); // call nextImage() every 5 seconds
+    setInterval(nextImage, 6000); // call nextImage() every 6 seconds (1 second for transition + 5 seconds for display)
 
     function updateTime() {
       var date = new Date();
