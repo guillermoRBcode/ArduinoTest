@@ -40,11 +40,6 @@
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
       margin-top: 5mm;
     }
-
-    /* Exclude clock element from opacity transition */
-    .time.no-transition {
-      transition: none;
-    }
   </style>
 </head>
 <body>
@@ -73,9 +68,18 @@
       img.onload = function() {
         var otherSlideshow = currentSlideshow === slideshow1 ? slideshow2 : slideshow1;
         otherSlideshow.style.backgroundImage = "url('" + imageUrl + "')";
+        
+        // Add the 'no-transition' class to the clock element before the opacity transition
+        var clockElement = document.querySelector('.time');
+        clockElement.classList.add('no-transition');
+        
         otherSlideshow.classList.add('visible');
         currentSlideshow.classList.remove('visible');
         currentSlideshow = otherSlideshow;
+        
+        // Remove the 'no-transition' class from the clock element after the opacity transition
+        clockElement.classList.remove('no-transition');
+        
         preloadNextImages();
       };
       img.src = imageUrl;
@@ -110,10 +114,7 @@
       minutes = minutes < 10 ? "0" + minutes : minutes;
       seconds = seconds < 10 ? "0" + seconds : seconds;
       var timeString = hours + ":" + minutes + ":" + seconds + " " + (date.getHours() > 12 ? "PM" : "AM");
-      var clockElement = document.querySelector('.time');
-      clockElement.classList.add('no-transition');
-      clockElement.textContent = timeString;
-      clockElement.classList.remove('no-transition');
+      document.querySelector(".time").textContent = timeString;
     }
 
     setInterval(updateTime, 1000);
