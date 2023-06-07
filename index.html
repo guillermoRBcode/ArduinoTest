@@ -2,6 +2,66 @@
 <html>
 <head>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mobile Slideshow Editor</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      display: flex;
+    }
+
+    .editor-container {
+      flex: 1;
+      height: 100vh;
+      padding: 20px;
+      background-color: #1f1e1e;
+      color: white;
+      font-family: Consolas, monospace;
+      font-size: 14px;
+      line-height: 1.5;
+      overflow-y: auto;
+    }
+
+    .editor-container textarea {
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+      color: white;
+      border: none;
+      resize: none;
+      outline: none;
+    }
+
+    .preview-container {
+      flex: 1;
+      height: 100vh;
+      padding: 20px;
+    }
+
+    .preview-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="editor-container">
+    <textarea id="html-editor" placeholder="Enter your HTML code here"></textarea>
+  </div>
+  <div class="preview-container">
+    <iframe id="preview"></iframe>
+  </div>
+
+  <script>
+    var htmlEditor = document.getElementById("html-editor");
+    var preview = document.getElementById("preview");
+
+    // Initialize the HTML editor with the default code
+    htmlEditor.value = `<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mobile Slideshow</title>
   <style>
     body {
@@ -48,7 +108,7 @@
   <div class="time"></div>
   <script>
     var imageNumbers = [];
-    var maxImageNumber = 91;
+    var maxImageNumber = 54;
     var slideshow1 = document.querySelector('#slideshow1');
     var slideshow2 = document.querySelector('#slideshow2');
     var currentSlideshow = slideshow1;
@@ -63,7 +123,7 @@
         imageNumbers.shift();
       }
 
-      var imageUrl = "images/background (" + imageNumber + ").png";
+      var imageUrl = "images/background (" + imageNumber + ").jpg";
       var img = new Image();
       img.onload = function() {
         var otherSlideshow = currentSlideshow === slideshow1 ? slideshow2 : slideshow1;
@@ -96,7 +156,7 @@
           imageNumbers.shift();
         }
 
-        var preloadImageUrl = "images/background (" + preloadImageNumber + ").png";
+        var preloadImageUrl = "images/background (" + preloadImageNumber + ").jpg";
         var preloadImg = new Image();
         preloadImg.src = preloadImageUrl;
       }
@@ -118,6 +178,21 @@
     }
 
     setInterval(updateTime, 1000);
+  </script>
+</body>
+</html>`;
+
+    // Update the preview with the initial HTML code
+    updatePreview();
+
+    // Update the preview on HTML editor input change
+    htmlEditor.addEventListener("input", updatePreview);
+
+    // Function to update the preview
+    function updatePreview() {
+      var code = htmlEditor.value;
+      preview.srcdoc = code;
+    }
   </script>
 </body>
 </html>
