@@ -40,6 +40,11 @@
       box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
       margin-top: 5mm;
     }
+
+    /* Exclude clock element from opacity transition */
+    .time.no-transition {
+      transition: none;
+    }
   </style>
 </head>
 <body>
@@ -48,7 +53,7 @@
   <div class="time"></div>
   <script>
     var imageNumbers = [];
-    var maxImageNumber = 54;
+    var maxImageNumber = 91;
     var slideshow1 = document.querySelector('#slideshow1');
     var slideshow2 = document.querySelector('#slideshow2');
     var currentSlideshow = slideshow1;
@@ -63,7 +68,7 @@
         imageNumbers.shift();
       }
 
-      var imageUrl = "images/background (" + imageNumber + ").jpg";
+      var imageUrl = "images/background (" + imageNumber + ").png";
       var img = new Image();
       img.onload = function() {
         var otherSlideshow = currentSlideshow === slideshow1 ? slideshow2 : slideshow1;
@@ -87,7 +92,7 @@
           imageNumbers.shift();
         }
 
-        var preloadImageUrl = "images/background (" + preloadImageNumber + ").jpg";
+        var preloadImageUrl = "images/background (" + preloadImageNumber + ").png";
         var preloadImg = new Image();
         preloadImg.src = preloadImageUrl;
       }
@@ -95,8 +100,9 @@
 
     changeImage();
     setInterval(changeImage, 4000);
-        function updateTime() {
- var date = new Date();
+
+    function updateTime() {
+      var date = new Date();
       var hours = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
       var minutes = date.getMinutes();
       var seconds = date.getSeconds();
@@ -104,7 +110,10 @@
       minutes = minutes < 10 ? "0" + minutes : minutes;
       seconds = seconds < 10 ? "0" + seconds : seconds;
       var timeString = hours + ":" + minutes + ":" + seconds + " " + (date.getHours() > 12 ? "PM" : "AM");
-      document.querySelector(".time").textContent = timeString;
+      var clockElement = document.querySelector('.time');
+      clockElement.classList.add('no-transition');
+      clockElement.textContent = timeString;
+      clockElement.classList.remove('no-transition');
     }
 
     setInterval(updateTime, 1000);
